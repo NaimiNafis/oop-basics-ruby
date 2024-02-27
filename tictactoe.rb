@@ -7,7 +7,7 @@ require 'pry-byebug'
 #         [" ", " ", " "],]
 grid = [["X", "O", "X"],
         ["X", " ", "O"],
-        ["O", "O", "O"],]
+        ["O", "X", "O"],]
 # labelled_grid = [["1", "2", "3"],
 #                  ["4", "5", "6"],
 #                  ["7", "8", "9"],]
@@ -21,28 +21,27 @@ def board_display(grid)
 end
 
 def check_win(grid)
-  # state always false unless win condition met
-
-  # check each row and column
-  3.times do |i|
-    if grid.any? { |row| row.all? { |cell| cell = "X" || cell = "O"} }
-      return true
-    elsif grid.transpose.any? { |col| col.all? { |cell| cell = "X" || cell = "O"} }
-      return true
-    end
+  # Check each row and column
+  if grid.any? { |row| row.all? { |cell| cell == "X" } } ||
+     grid.any? { |row| row.all? { |cell| cell == "O" } } ||
+     grid.transpose.any? { |col| col.all? { |cell| cell == "X" } } ||
+     grid.transpose.any? { |col| col.all? { |cell| cell == "O" } }
+    return true
   end
 
-  # check diagonal
+  # Check diagonals
   diagonal1 = [grid[0][0], grid[1][1], grid[2][2]]
   diagonal2 = [grid[0][2], grid[1][1], grid[2][0]]
-  if diagonal1.all? { |cell| cell = "X" || cell = "O"}
-    return true
-  elsif diagonal2.all? { |cell| cell = "X" || cell = "O"}
+  if diagonal1.all? { |cell| cell == "X" } ||
+     diagonal1.all? { |cell| cell == "O" } ||
+     diagonal2.all? { |cell| cell == "X" } ||
+     diagonal2.all? { |cell| cell == "O" }
     return true
   end
 
   false
 end
+
 
 
 def game(grid, p1, p2)
@@ -51,6 +50,7 @@ def game(grid, p1, p2)
     puts "Player '#{current_player}' : Please enter any number between cell 1~9"
     board_display(grid)
     take_turn(grid, current_player)
+    # binding.pry
     if check_win(grid) == true
       board_display(grid)
       puts "#{current_player} Win"
