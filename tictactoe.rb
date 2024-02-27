@@ -45,25 +45,38 @@ def winning_diagonals?(grid, player)
   diagonal1.all? { |cell| cell == player } || diagonal2.all? { |cell| cell == player }
 end
 
+# Game start
 def game(grid, player1, player2)
   current_player = player1
   loop do
-    puts "Player '#{current_player}' : Please enter any number between cell 1~9"
+    display_player_turn(current_player)
     board_display(grid)
     take_turn(grid, current_player)
-    # binding.pry
-    if grid.all? { |row| row.all? { |cell| cell != ' ' } } # Check if all cell.full?
-      puts 'All cell has been filled and No winner decided!'
+    if game_ended?(grid)
       break
-    elsif check_win(grid) == true
+    elsif check_win(grid)
       board_display(grid)
-      puts "#{current_player} Win"
+      puts "#{current_player} Wins!"
       break
     end
-    current_player = current_player == player1 ? player2 : player1
+    current_player = (current_player == player1) ? player2 : player1
   end
 end
 
+def display_player_turn(current_player)
+  puts "Player '#{current_player}' : Please enter any number between cell 1~9"
+end
+
+def game_ended?(grid)
+  if grid.all? { |row| row.all? { |cell| cell != ' ' } }
+    puts 'All cells have been filled and No winner decided!'
+    true
+  else
+    false
+  end
+end
+
+# Get user input for move taken
 def take_turn(grid, current_player)
   move = get_valid_move(grid)
   row, col = convert_move_to_position(move)
