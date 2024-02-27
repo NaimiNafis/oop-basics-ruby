@@ -65,21 +65,26 @@ def game(grid, player1, player2)
 end
 
 def take_turn(grid, current_player)
-  move = gets.chomp.to_i
+  move = get_valid_move(grid)
+  row, col = convert_move_to_position(move)
+  grid[row][col] = current_player
+end
+
+def get_valid_move(grid)
+  loop do
+    puts 'Please enter a number between 1 and 9:'
+    move = gets.chomp.to_i
+    row, col = convert_move_to_position(move)
+    return move if row.between?(0, 2) && col.between?(0, 2) && grid[row][col] == ' '
+
+    puts 'Invalid move. Please try again.'
+  end
+end
+
+def convert_move_to_position(move)
   row = (move - 1) / 3
   col = (move - 1) % 3
-
-  if row >= 0 && row < 3 && col >= 0 && col < 3
-    if grid[row][col] == ' '
-      grid[row][col] = current_player
-    else
-      puts 'That cell is already taken. Please choose another.'
-      take_turn(grid, current_player)
-    end
-  else
-    puts 'Please put a number between 1~9'
-    take_turn(grid, current_player)
-  end
+  [row, col]
 end
 
 game(grid, player1, player2)
