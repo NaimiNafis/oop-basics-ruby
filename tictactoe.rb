@@ -1,44 +1,29 @@
-class Board
-  def initialize
-    # Initialize the board
-  end
+require 'pry-byebug'
 
-  def display
-    # Display the board
-  end
+grid = Array.new(3) { Array.new(3, " ") }
 
-  def check_win
-    # Check for a win
-  end
-
-  def full?
-    # Check if the board is full
+def board_display(grid)
+  grid.each do |row|
+    puts row.join(" | ")
   end
 end
 
-class Player
-  attr_reader :name, :symbol
+board_display(grid)
 
-  def initialize(name, symbol)
-    @name = name
-    @symbol = symbol
+def check_win(grid)
+  # state always false unless win condition met
+
+  grid.each_with_index do |row, i|
+    if grid.uniq.length == 1 && grid.first != " "
+      return true
+    end
   end
+
+  false
 end
 
-class Game
-  def initialize
-    # Initialize players and board
-  end
+def game
+end
 
-  def start
-    # Start the game loop
-  end
-
-  def take_turn
-    # Handle a player's turn
-  end
-
-  def game_over?
-    # Check if the game is over
-  end
+def move
 end
