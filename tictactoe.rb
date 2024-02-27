@@ -6,7 +6,7 @@ grid = [[" ", " ", " "],
         [" ", " ", " "],
         [" ", " ", " "],]
 # labelled_grid = [["1", "2", "3"],
-#                  ["6", "5", "4"],
+#                  ["4", "5", "6"],
 #                  ["7", "8", "9"],]
 p1 = "X"
 p2 = "O"
@@ -41,15 +41,20 @@ def check_win(grid)
   false
 end
 
+
 def game(grid, p1, p2)
   current_player = p1
-  board_display(grid)
-  take_turn(grid, current_player)
-  board_display(grid)
-
-
-
-
+  loop do
+    puts "Player '#{current_player}' : Please enter any number between cell 1~9"
+    board_display(grid)
+    take_turn(grid, current_player)
+    if check_win(grid) == true
+      board_display(grid)
+      puts "#{current_player} Win"
+      break
+    end
+    current_player = current_player == p1 ? p2 : p1
+  end
 end
 
 def take_turn(grid, current_player)
