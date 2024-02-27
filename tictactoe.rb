@@ -51,12 +51,13 @@ def game(grid, p1, p2)
     board_display(grid)
     take_turn(grid, current_player)
     # binding.pry
-    if check_win(grid) == true
+    if grid.all? {|row| row.all? {|cell| cell != " "}} # Check if all cell.full?
+      puts "All cell has been filled and No winner decided!"
+      break
+    elsif check_win(grid) == true
       board_display(grid)
       puts "#{current_player} Win"
       break
-    elsif grid.all? {|row| row.all? {|cell| cell != " "}} # Check if all cell.full?
-      puts "All Cell has been filled!"
     end
     current_player = current_player == p1 ? p2 : p1
   end
