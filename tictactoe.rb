@@ -22,26 +22,27 @@ def board_display(grid)
   end
 end
 
+# Check if win conditional mitasu or not
 def check_win(grid)
-  # Check each row and column
-  if grid.any? { |row| row.all? { |cell| cell == 'X' } } ||
-     grid.any? { |row| row.all? { |cell| cell == 'O' } } ||
-     grid.transpose.any? { |col| col.all? { |cell| cell == 'X' } } ||
-     grid.transpose.any? { |col| col.all? { |cell| cell == 'O' } }
-    return true
-  end
-
-  # Check diagonals
-  diagonal1 = [grid[0][0], grid[1][1], grid[2][2]]
-  diagonal2 = [grid[0][2], grid[1][1], grid[2][0]]
-  if diagonal1.all? { |cell| cell == 'X' } ||
-     diagonal1.all? { |cell| cell == 'O' } ||
-     diagonal2.all? { |cell| cell == 'X' } ||
-     diagonal2.all? { |cell| cell == 'O' }
-    return true
-  end
+  return true if winning_rows?(grid, 'X') || winning_rows?(grid, 'O') ||
+                 winning_columns?(grid, 'X') || winning_columns?(grid, 'O') ||
+                 winning_diagonals?(grid, 'X') || winning_diagonals?(grid, 'O')
 
   false
+end
+
+def winning_rows?(grid, player)
+  grid.any? { |row| row.all? { |cell| cell == player } }
+end
+
+def winning_columns?(grid, player)
+  grid.transpose.any? { |col| col.all? { |cell| cell == player } }
+end
+
+def winning_diagonals?(grid, player)
+  diagonal1 = [grid[0][0], grid[1][1], grid[2][2]]
+  diagonal2 = [grid[0][2], grid[1][1], grid[2][0]]
+  diagonal1.all? { |cell| cell == player } || diagonal2.all? { |cell| cell == player }
 end
 
 def game(grid, player1, player2)
