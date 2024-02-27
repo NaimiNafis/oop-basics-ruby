@@ -2,9 +2,12 @@ require 'pry-byebug'
 
 # grid = Array.new(3) { Array.new(3, " ") }
 
-grid = [[" ", " ", " "],
-        [" ", " ", " "],
-        [" ", " ", " "],]
+# grid = [["X", "X", " "],
+#         ["X", "X", " "],
+#         [" ", " ", " "],]
+grid = [["X", "O", "X"],
+        ["X", " ", "O"],
+        ["O", "O", "O"],]
 # labelled_grid = [["1", "2", "3"],
 #                  ["4", "5", "6"],
 #                  ["7", "8", "9"],]
@@ -22,9 +25,9 @@ def check_win(grid)
 
   # check each row and column
   3.times do |i|
-    if grid[i].uniq.length == 1 && grid[i].first != " "
+    if grid.any? { |row| row.all? { |cell| cell = "X" || cell = "O"} }
       return true
-    elsif grid.transpose[i].uniq.length == 1 && grid.transpose[i].first != " "
+    elsif grid.transpose.any? { |col| col.all? { |cell| cell = "X" || cell = "O"} }
       return true
     end
   end
@@ -32,9 +35,9 @@ def check_win(grid)
   # check diagonal
   diagonal1 = [grid[0][0], grid[1][1], grid[2][2]]
   diagonal2 = [grid[0][2], grid[1][1], grid[2][0]]
-  if diagonal1.uniq.length == 1  && diagonal1.first != " "
+  if diagonal1.all? { |cell| cell = "X" || cell = "O"}
     return true
-  elsif diagonal2.uniq.length == 1  && diagonal2.first != " "
+  elsif diagonal2.all? { |cell| cell = "X" || cell = "O"}
     return true
   end
 
@@ -52,6 +55,8 @@ def game(grid, p1, p2)
       board_display(grid)
       puts "#{current_player} Win"
       break
+    elsif grid.all? {|row| row.all? {|cell| cell != " "}} # Check if all cell.full?
+      puts "All Cell has been filled!"
     end
     current_player = current_player == p1 ? p2 : p1
   end
@@ -74,5 +79,6 @@ def take_turn(grid, current_player)
     take_turn(grid, current_player)
   end
 end
+
 
 game(grid, p1, p2)
