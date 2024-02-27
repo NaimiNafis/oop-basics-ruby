@@ -5,14 +5,17 @@ require 'pry-byebug'
 grid = [[" ", " ", " "],
         [" ", " ", " "],
         [" ", " ", " "],]
+# labelled_grid = [["1", "2", "3"],
+#                  ["6", "5", "4"],
+#                  ["7", "8", "9"],]
+p1 = "X"
+p2 = "O"
 
 def board_display(grid)
   grid.each do |row|
     puts row.join(" | ")
   end
 end
-
-board_display(grid)
 
 def check_win(grid)
   # state always false unless win condition met
@@ -38,10 +41,33 @@ def check_win(grid)
   false
 end
 
-check_win(grid)
+def game(grid, p1, p2)
+  current_player = p1
+  board_display(grid)
+  take_turn(grid, current_player)
+  board_display(grid)
 
-def game
+
+
+
 end
 
-def move
+def take_turn(grid, current_player)
+  move = gets.chomp.to_i
+  row = (move - 1) / 3
+  col = (move - 1) % 3
+
+  if row >= 0 && row < 3 && col >= 0 && col < 3
+    if grid[row][col] == " "
+      grid[row][col] = current_player
+    else
+      puts "That cell is already taken. Please choose another."
+      take_turn(grid, current_player)
+    end
+  else
+    puts "Please put a number between 1~9"
+    take_turn(grid, current_player)
+  end
 end
+
+game(grid, p1, p2)
