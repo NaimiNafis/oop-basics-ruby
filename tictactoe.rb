@@ -74,7 +74,11 @@ end
 # Handles displaying information to the console for the Tic Tac Toe game.
 class DisplayView
   def display_board(grid)
-    grid.each { |row| puts row.join(' | ') }
+    puts '+---+---+---+'
+    grid.each do |row|
+      puts "| #{row.join(' | ')} |"
+      puts '+---+---+---+'
+    end
   end
 
   def display_instruction
