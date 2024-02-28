@@ -2,14 +2,8 @@
 
 require 'pry-byebug'
 
-# grid = Array.new(3) { Array.new(3, " ") }
-
-# grid = [["X", "X", " "],
-#         ["X", "X", " "],
-#         [" ", " ", " "],]
-grid = [['X', 'O', 'X'],
-        ['X', ' ', 'O'],
-        ['O', 'X', 'O']]
+# Global Variable and Board Display
+grid = Array.new(3) { Array.new(3, ' ') }
 # labelled_grid = [["1", "2", "3"],
 #                  ["4", "5", "6"],
 #                  ["7", "8", "9"],]
@@ -20,6 +14,30 @@ def board_display(grid)
   grid.each do |row|
     puts row.join(' | ')
   end
+end
+
+# Get user input for move taken
+def take_turn(grid, current_player)
+  move = get_valid_move(grid)
+  row, col = convert_move_to_position(move)
+  grid[row][col] = current_player
+end
+
+def get_valid_move(grid)
+  loop do
+    puts 'Please enter a number between 1 and 9:'
+    move = gets.chomp.to_i
+    row, col = convert_move_to_position(move)
+    return move if row.between?(0, 2) && col.between?(0, 2) && grid[row][col] == ' '
+
+    puts 'Invalid move. Please try again.'
+  end
+end
+
+def convert_move_to_position(move)
+  row = (move - 1) / 3
+  col = (move - 1) % 3
+  [row, col]
 end
 
 # Check if win conditional mitasu or not
@@ -52,19 +70,15 @@ def game(grid, player1, player2)
     display_player_turn(current_player)
     board_display(grid)
     take_turn(grid, current_player)
-    if game_ended?(grid)
-      break
-    elsif check_win(grid)
-      board_display(grid)
-      puts "#{current_player} Wins!"
-      break
-    end
-    current_player = (current_player == player1) ? player2 : player1
+    break if game_ended?(grid)
+    break if check_win_and_display_winner(grid, current_player, player1, player2)
+
+    current_player = switch_player(current_player, player1, player2)
   end
 end
 
 def display_player_turn(current_player)
-  puts "Player '#{current_player}' : Please enter any number between cell 1~9"
+  puts "Your Turn, Player '#{current_player}'!"
 end
 
 def game_ended?(grid)
@@ -76,28 +90,18 @@ def game_ended?(grid)
   end
 end
 
-# Get user input for move taken
-def take_turn(grid, current_player)
-  move = get_valid_move(grid)
-  row, col = convert_move_to_position(move)
-  grid[row][col] = current_player
-end
-
-def get_valid_move(grid)
-  loop do
-    puts 'Please enter a number between 1 and 9:'
-    move = gets.chomp.to_i
-    row, col = convert_move_to_position(move)
-    return move if row.between?(0, 2) && col.between?(0, 2) && grid[row][col] == ' '
-
-    puts 'Invalid move. Please try again.'
+def check_win_and_display_winner(grid, current_player, _player1, _player2)
+  if check_win(grid)
+    board_display(grid)
+    puts "#{current_player} Wins!"
+    true
+  else
+    false
   end
 end
 
-def convert_move_to_position(move)
-  row = (move - 1) / 3
-  col = (move - 1) % 3
-  [row, col]
+def switch_player(current_player, player1, player2)
+  current_player == player1 ? player2 : player1
 end
 
 game(grid, player1, player2)
