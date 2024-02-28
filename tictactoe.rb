@@ -105,3 +105,24 @@ def switch_player(current_player, player1, player2)
 end
 
 game(grid, player1, player2)
+
+class Game
+
+end
+
+class Player
+  attr_reader :name, :symbol
+
+  def initialize(name, symbol)
+    @name = name
+    @symbol = symbol
+  end
+end
+
+class Board
+
+end
+
+class Display
+
+end
