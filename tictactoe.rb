@@ -6,6 +6,7 @@ require 'pry-byebug'
 # View = all outputs to the console, including displaying the board and messages to the player.
 # Controller = user input and integrate the Model and View by controlling the game flow aka Logic.
 
+# Represents a player in the Tic Tac Toe game, holding their name and symbol.
 class PlayerModel
   attr_reader :name, :symbol
 
@@ -15,6 +16,7 @@ class PlayerModel
   end
 end
 
+# Manages the Tic Tac Toe game board, including the grid, players, and game state.
 class BoardModel
   attr_accessor :grid
   attr_reader :player1, :player2, :current_player
@@ -69,6 +71,7 @@ class BoardModel
   end
 end
 
+# Handles displaying information to the console for the Tic Tac Toe game.
 class DisplayView
   def display_board(grid)
     grid.each { |row| puts row.join(' | ') }
@@ -83,7 +86,7 @@ class DisplayView
   end
 
   def display_player_turn(player)
-    puts "Your Turn, Player '#{player}'!"
+    puts "Your Turn, '#{player}'!"
   end
 
   def display_winner(player)
@@ -95,6 +98,7 @@ class DisplayView
   end
 end
 
+# Controls the game flow, integrating the model and view for the Tic Tac Toe game.
 class GameController
   def initialize
     @model = BoardModel.new
@@ -103,15 +107,27 @@ class GameController
 
   def play_game
     until @model.game_ended?
-      @view.display_board(@model.grid)
-      @view.display_player_turn(@model.current_player.name)
-      row, col = player_move
-      @model.take_turn(row, col)
-      @model.switch_player unless @model.game_ended?
+      display_current_state
+      handle_turn
     end
+    finalize_game
+  end
 
+  private
+
+  def display_current_state
     @view.display_board(@model.grid)
+    @view.display_player_turn(@model.current_player.name)
+  end
 
+  def handle_turn
+    row, col = player_move
+    @model.take_turn(row, col)
+    @model.switch_player unless @model.game_ended?
+  end
+
+  def finalize_game
+    @view.display_board(@model.grid)
     if @model.check_win
       @view.display_winner(@model.current_player.name)
     else
@@ -127,11 +143,8 @@ class GameController
       return [row, col] if @model.valid_move?(row, col)
 
       @view.display_error
-      player_move
     end
   end
-
-  private
 
   def convert_move_to_position(move)
     row = (move - 1) / 3
