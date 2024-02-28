@@ -85,7 +85,7 @@ class DisplayView
     puts 'Please enter a number between 1 and 9:'
   end
 
-  def display_error
+  def display_error_move
     puts 'Invalid move. Please try again.'
   end
 
@@ -94,11 +94,24 @@ class DisplayView
   end
 
   def display_winner(player)
-    puts "#{player} Wins!"
+    puts "GAME OVER! #{player} Wins!"
   end
 
   def display_draw
-    puts 'The game ended in a draw.'
+    puts 'GAME OVER! The game ended in a draw.'
+  end
+
+  def display_invite
+    puts 'Do you want to play again?'
+    puts 'Answer with Y/N.'
+  end
+
+  def display_gratitude
+    puts 'Thank You for Playing!!'
+  end
+
+  def display_error_answer
+    puts 'Invalid input. Please try again.'
   end
 end
 
@@ -109,12 +122,19 @@ class GameController
     @view = DisplayView.new
   end
 
+  def reset_game
+    @model = BoardModel.new
+    @view = DisplayView.new
+  end
+
   def play_game
+    reset_game
     until @model.game_ended?
       display_current_state
       handle_turn
     end
     finalize_game
+    play_again?
   end
 
   private
@@ -139,6 +159,23 @@ class GameController
     end
   end
 
+  def play_again?
+    loop do
+      @view.display_invite
+      answer = gets.chomp.downcase
+      case answer
+      when 'y'
+        play_game
+        break # Exit loop after starting new game
+      when 'n'
+        @view.display_gratitude
+        break # Exit loop and end game
+      else
+        @view.display_error_answer
+      end
+    end
+  end
+
   def player_move
     loop do
       @view.display_instruction
@@ -146,7 +183,7 @@ class GameController
       row, col = convert_move_to_position(move)
       return [row, col] if @model.valid_move?(row, col)
 
-      @view.display_error
+      @view.display_error_move
     end
   end
 
