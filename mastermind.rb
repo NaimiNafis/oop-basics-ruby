@@ -21,7 +21,7 @@ while attempts < max_attempts do
   correct_positions = secret_colours.zip(guess).count { |a,b| a == b }
 
   # only count all same colours without looking at the positions
-  # let say if i guess red is 3 but the SC's red is 1, so the count will be 1
+  # let say if i guess red is 3 but the SC's red is 1, so the min count will be 1. The total should be < 4
   correct_colours = secret_colours.uniq.sum { |c| [secret_colours.count(c), guess.count(c)].min}
   correct_colours = correct_colours - correct_positions # minus to prevent double counting
 
@@ -35,6 +35,49 @@ while attempts < max_attempts do
     break
   else
     puts "Try again!"
+  end
+
+end
+
+class Game
+
+  COLOURS = ["red", "green", "blue", "yellow", "purple", "orange"]
+  MAX_ATTEPTS = 10
+  CODE_LENGTH = 4
+
+  def initialize
+    @attempts = 0
+    @creator = nil
+    @guesser = nil
+    @secret_colours = []
+  end
+
+end
+
+class Player
+
+  def initialize
+
+  end
+
+  def create_code
+
+  end
+
+  def guess_code
+
+  end
+
+end
+
+class Computer
+
+  def create_code
+
+  end
+
+  def guess_code
+
   end
 
 end
