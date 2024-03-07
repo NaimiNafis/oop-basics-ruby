@@ -11,9 +11,9 @@ class Game
     @creator = nil
     @guesser = nil
     @secret_colours = []
-    @correct_positions = 0  # Add this line
+    @correct_positions = 0
+    @previous_attempts = []
   end
-
 
   def choose_roles
     setup_roles(role_choice)
@@ -57,20 +57,25 @@ class Game
   end
 
   def display_previous_attempts
-    puts 'Previous Attempts:' unless @attempts.zero?
-    # Optionally print a summary of previous attempts here
+    puts 'Previous Attempts:' unless @previous_attempts.empty?
+    @previous_attempts.each_with_index do |attempt, index|
+      puts "\nAttempt #{index + 1}: Guess - #{attempt[:guess].join(', ')}"
+      puts "● Bagels (correct position): #{attempt[:correct_positions]}"
+      puts "○ Picos (correct color, wrong position): #{attempt[:correct_colours]}\n"
+    end
   end
 
   def process_guess
     guess = @guesser.guess_code(COLOURS, CODE_LENGTH)
     @correct_positions, correct_colours = evaluate_guess(guess)
 
+    @previous_attempts << { guess: guess, correct_positions: @correct_positions, correct_colours: correct_colours }
+
     clear_screen
     display_guess_feedback(guess, @correct_positions, correct_colours)
 
     @attempts += 1
   end
-
 
   def evaluate_guess(guess)
     correct_positions = @secret_colours.zip(guess).count { |a, b| a == b }
@@ -98,7 +103,6 @@ class Game
     end
   end
 
-
   def prepare_next_attempt
     puts 'Try again! (Press enter to continue...)'
     gets
@@ -123,7 +127,7 @@ class Player
   end
 
   def guess_code(colours, length)
-    puts "Guess the secret colors (#{colours.join(', ')}):"
+    puts "\nGuess the secret colors (#{colours.join(', ')}):"
     guess = gets.chomp.split
     until guess.length == length && guess.all? { |g| colours.include?(g) }
       puts "Wrong input: Please enter exactly #{length} valid colours (#{colours.join(', ')})."
